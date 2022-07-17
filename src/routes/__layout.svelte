@@ -9,7 +9,7 @@
   let landscape = false;
   let mount = new Promise((r) => onMount(r))
   onMount(() => {
-    standalone = window.navigator.standalone || false
+    standalone = window.navigator?.standalone || false
     landscape = window.matchMedia('(orientation: landscape)').matches
     window.matchMedia('(orientation: landscape)').onchange = (e) => {
       landscape = e.matches
