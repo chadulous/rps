@@ -1,5 +1,6 @@
 <script lang=ts>
     import RPS from '$lib/RPS.svelte';
+    import { username } from '$lib/store';
     export let route: string
     import { io } from 'socket.io-client';
     import { onMount } from 'svelte';
@@ -16,8 +17,8 @@
     const client = io(`/${route}`)
     const ready = writable(false)
     const error = writable(false)
-    const name = writable('')
     const res = writable<Resolve>('')
+    
     const restring = derived(res, (res) => {
         switch(res) {
             case 'draw':
@@ -70,6 +71,9 @@
     })
 
     client.on('end', (win: boolean) => {
+        setInterval(() => {
+            ublock.disable()
+        }, 100)
         setTimeout(() => {
                 if(win) {
                 res.set('victory')
@@ -97,7 +101,7 @@
         await wait(500)
         res.set('scissors')
         await wait(500)
-        res.set('svelte')
+        res.set('shoot')
         await wait(500)
         oblock.opponentchoice(ch)
         res.set(reso)
@@ -117,7 +121,7 @@
     })
     
     function creategame() {
-        client.emit('create', $name, (id: string) => {
+        client.emit('create', $username, (id: string) => {
             console.log(id)
             document.location = `/app/play:${id}`
         })
@@ -125,6 +129,30 @@
 
     function choose(e: CustomEvent<string>) {
         client.emit('choice', e.detail)
+    }
+
+    const tabs = [
+        'Join',
+        'Create'
+    ]
+
+    const currenttab = writable('Join')
+    const listofgames = writable<Array<{ id: string, name: string }>>([])
+    client.on('update', (g) => {
+        console.log(g)
+        listofgames.set(g)
+    })
+
+    function wraptab(id: string) {
+        return () => {
+            currenttab.set(id)
+        }
+    }
+
+    function wrapjoin(id: string) {
+        return () => {
+            document.location = `/app/play:${id}`
+        }
     }
 </script>
 
@@ -149,8 +177,25 @@
                     </div>
                     {/if}
                 {:else}
-                    <input type="text" bind:value={$name}>
-                    <button on:click={creategame}>Create</button>
+                    <div class="h-96 w-96 min-h-96 max-h-96 min-w-96 max-w-96 flex flex-col items-center justify-center bg-base-200 shadow-lg rounded-2xl">
+                        <div class="tabs">
+                            {#each tabs as tab}
+                                <span on:click={wraptab(tab)} class="tab tab-bordered" class:tab-active={$currenttab === tab}>{tab}</span> 
+                            {/each}
+                        </div>
+                        <input type="text" class="input" placeholder="Username" bind:value={$username}>
+                        <div class="flex-grow"></div>
+                        {#if $currenttab === "Create"}
+                        <button class="btn btn-ghost" on:click={creategame}>Create</button>
+                        {:else}
+                        <div class="overflow-y-scroll nobar rounded-2xl w-full h-full bg-base-300">
+                            {#each $listofgames as game}
+                                <button class="btn btn-ghost w-full" on:click={wrapjoin(game.id)}>{game.name}</button>
+                            {/each}
+                        </div>
+                        {/if}
+                        <div class="flex-grow"></div>
+                    </div>
                 {/if}
         {:else if $error}
         <span>

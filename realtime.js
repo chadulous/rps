@@ -12,10 +12,10 @@ function compare(player, owner) {
         return 'draw';
     }
     if (player == choices.length - 1 && owner == 0) {
-        return "pwin";
+        return "owin";
     }
     if (owner == choices.length - 1 && player == 0) {
-        return "owin";
+        return "pwin";
     }
     if (player > owner) {
         return "pwin";
@@ -35,7 +35,7 @@ function attachrealtime(io) {
         const matchid = s.nsp.name.match(route)[1]
         if(!matches.find((v) => v.id === matchid)) return
         const gameindex = matches.findIndex(v => v.id === matchid)
-        console.log('ready')
+        io.of('/').emit('update', matches.filter((v) => v.player === null))
         if(matches[gameindex].owner === null) {
             matches[gameindex].owner = s.id
             s.emit('game')
@@ -58,13 +58,18 @@ function attachrealtime(io) {
                     if(matches[gameindex].ownerpoints === 6) {
                         s.emit('end', true)
                         s.broadcast.emit('end', false)
+                        delete matches[gameindex]
                     } else if(matches[gameindex].playerpoints === 6) {
                         s.emit('end', false)
                         s.broadcast.emit('end', true)
+                        delete matches[gameindex]
                     }
+                    io.of('/').emit('update', matches.filter((v) => v.player === null))
                 }
             })
-            // EZ
+            s.on('disconnect', () => {
+                s.broadcast.emit('end', true)
+            })
         } else if(matches[gameindex].player === null) {
             matches[gameindex].player = s.id
             s.emit('game')
@@ -95,6 +100,9 @@ function attachrealtime(io) {
                     }
                 }
             })
+            s.on('disconnect', () => {
+                s.broadcast.emit('end', true)
+            })
         } else {
             s.disconnect()
             return
@@ -107,6 +115,7 @@ function attachrealtime(io) {
     })
     io.on('connection', (s) => {
         s.emit('ready')
+        s.emit('update', matches.filter((v) => v.player === null))
         s.on('create', (n, cb) => {
             const id = nanoid()
             matches.push({
@@ -116,9 +125,11 @@ function attachrealtime(io) {
                 player: null,
                 playerchoice: null,
                 playerpoints: 0,
-                id
+                id,
+                name: n
             })
             cb(id)
+            s.broadcast.emit('update', matches.filter((v) => v.player === null))
         })
     })
 }
