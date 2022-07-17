@@ -6,6 +6,7 @@
     import { onMount } from 'svelte';
     import { derived, writable } from 'svelte/store';
     import { scale } from 'svelte/transition';
+    import { Confetti } from "svelte-confetti"
 
     type Resolve = 'owin' | 'pwin' | 'draw' | string
 
@@ -154,14 +155,21 @@
             document.location.replace(`/app/play:${id}`)
         }
     }
+
+    restring.subscribe(console.log)
 </script>
 
+{#if $restring === 'victory'}
+<div class="fixed -top-[50px] left-0 h-screen w-screen flex justify-center overflow-hidden">
+    <Confetti x={[-5, 5]} y={[0, 0.1]} delay={[500, 2000]} infinite duration=1000 amount=200 fallDistance="100vh" />
+</div>
+{/if}
 
 <div class="flex flex-grow items-center justify-center">
         {#if $ready}
                 {#if $game}
                     {#if !$playing}
-                        Computing...
+                        Waiting For players...
                     {:else}
                     <div class="flex-grow flex flex-col items-center justify-center">
                         {#if $res}
