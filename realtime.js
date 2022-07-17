@@ -33,8 +33,8 @@ function attachrealtime(io) {
     const route = /^\/play:([\w\s\d]*)$/
     io.of(route).on('connection', (s) => {
         const matchid = s.nsp.name.match(route)[1]
-        if(!matches.find((v) => v.id === matchid)) return
-        const gameindex = matches.findIndex(v => v.id === matchid)
+        if(!matches.find((v) => v?.id === matchid)) return
+        const gameindex = matches.findIndex(v => v?.id === matchid)
         io.of('/').emit('update', matches.filter((v) => v.player === null))
         if(matches[gameindex].owner === null) {
             matches[gameindex].owner = s.id

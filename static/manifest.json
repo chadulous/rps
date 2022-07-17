@@ -1,0 +1,6 @@
+{
+    "name": "Roks", 
+    "short_name": "ROKS", 
+    "start_url": "http://192.168.0.96:5173/app",
+    "display": "standalone"
+}

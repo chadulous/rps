@@ -14,3 +14,7 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
+
+.RPS {
+    @apply max-w-[10rem] min-w-[10rem] max-h-[10rem] min-h-[10rem] lg:max-w-[21rem] lg:min-w-[21rem] lg:max-h-[21rem] lg:min-h-[21rem]
+}

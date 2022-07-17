@@ -2,6 +2,20 @@
   import type { IconType } from "$lib/icon";
   import { icotheme } from "$lib/store";
   import "../app.css";
+  // Mobile detection
+  import { onMount } from "svelte";
+  import Detector from 'svelte-device-detector'
+  let standalone = false;
+  let landscape = false;
+  let mount = new Promise((r) => onMount(r))
+  onMount(() => {
+    standalone = window.navigator.standalone || false
+    landscape = window.matchMedia('(orientation: landscape)').matches
+    window.matchMedia('(orientation: landscape)').onchange = (e) => {
+      landscape = e.matches
+    }
+  })
+
   const iconthemes: Array<{ name: string, id: IconType }> = [
     {
       name: "Items",
@@ -20,9 +34,27 @@
   }
 </script>
 
-<div class="w-screen h-screen flex flex-col">
+{#await mount then}
+<Detector showInDevice="mobile">
+  {#if !standalone}
+  <div class="absolute h-screen w-screen flex items-center justify-center bg-black z-50">
+    <span>
+      For a better experience, Tap share, then add to home screen.
+    </span>
+  </div>
+  {/if}
+  {#if !landscape}
+  <div class="absolute h-screen w-screen flex items-center justify-center bg-black z-40">
+    <span>
+      Please rotate device to landscape mode.
+    </span>
+  </div>
+  {/if}
+</Detector>
+{/await}
+<div class="w-screen h-screen flex flex-col nobar">
   <div class="navbar bg-base-200">
-    <a href="/" class="btn btn-ghost">RPS</a>
+    <a href="/" class="btn btn-ghost">ROKS</a>
     <div class="dropdown">
       <label tabindex="0" for="iconselector" class="btn btn-ghost normal-case m-1">
         Icon Theme

@@ -78,12 +78,12 @@
                 if(win) {
                 res.set('victory')
                 setTimeout(() => {
-                    document.location = '/app'
+                    document.location.replace('/app')
                 }, 1000)
             } else {
                 res.set('defeat')
                 setTimeout(() => {
-                    document.location = '/app'
+                    document.location.replace('/app')
                 }, 1000)
             }
         }, 4000)
@@ -123,7 +123,7 @@
     function creategame() {
         client.emit('create', $username, (id: string) => {
             console.log(id)
-            document.location = `/app/play:${id}`
+            document.location.replace(`/app/play:${id}`)
         })
     }
 
@@ -151,7 +151,7 @@
 
     function wrapjoin(id: string) {
         return () => {
-            document.location = `/app/play:${id}`
+            document.location.replace(`/app/play:${id}`)
         }
     }
 </script>
@@ -177,7 +177,7 @@
                     </div>
                     {/if}
                 {:else}
-                    <div class="h-96 w-96 min-h-96 max-h-96 min-w-96 max-w-96 flex flex-col items-center justify-center bg-base-200 shadow-lg rounded-2xl">
+                    <div class="flex flex-col items-center justify-center bg-base-200 shadow-lg rounded-2xl">
                         <div class="tabs">
                             {#each tabs as tab}
                                 <span on:click={wraptab(tab)} class="tab tab-bordered" class:tab-active={$currenttab === tab}>{tab}</span> 
@@ -186,11 +186,11 @@
                         <input type="text" class="input" placeholder="Username" bind:value={$username}>
                         <div class="flex-grow"></div>
                         {#if $currenttab === "Create"}
-                        <button class="btn btn-ghost" on:click={creategame}>Create</button>
+                        <button class="btn btn-ghost" disabled={!$username} on:click={creategame}>Create</button>
                         {:else}
                         <div class="overflow-y-scroll nobar rounded-2xl w-full h-full bg-base-300">
                             {#each $listofgames as game}
-                                <button class="btn btn-ghost w-full" on:click={wrapjoin(game.id)}>{game.name}</button>
+                                <button class="btn btn-ghost w-full" disabled={!$username} on:click={wrapjoin(game.id)}>{game.name}</button>
                             {/each}
                         </div>
                         {/if}
