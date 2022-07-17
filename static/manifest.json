@@ -3,9 +3,16 @@
     "short_name": "ROKS", 
     "start_url": "https://roks.up.railway.app/app",
     "display": "standalone",
-    "icons": [{
-        "src": "ROKS.png",
-        "sizes": "240x240",
-        "type": "image/png" 
-    }] 
+    "icons": [
+        {
+            "src": "ROKS.png",
+            "sizes": "240x240",
+            "type": "image/png"
+        },
+        {
+            "src": "ROKS-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ] 
 }

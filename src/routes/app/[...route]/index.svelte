@@ -177,7 +177,7 @@
                     </div>
                     {/if}
                 {:else}
-                    <div class="flex flex-col items-center justify-center bg-base-200 shadow-lg rounded-2xl">
+                    <div class="h-40 max-h-40 flex flex-col items-center justify-center bg-base-200 shadow-lg rounded-2xl">
                         <div class="tabs">
                             {#each tabs as tab}
                                 <span on:click={wraptab(tab)} class="tab tab-bordered" class:tab-active={$currenttab === tab}>{tab}</span> 
