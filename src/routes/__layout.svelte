@@ -37,14 +37,14 @@
 {#await mount then}
 <Detector showInDevice="mobile">
   {#if !standalone}
-  <div class="absolute h-screen w-screen flex items-center justify-center bg-black z-50">
+  <div class="absolute h-screen w-screen flex items-center justify-center bg-base-200 z-50">
     <span>
       For a better experience, Tap share, then add to home screen.
     </span>
   </div>
   {/if}
   {#if !landscape}
-  <div class="absolute h-screen w-screen flex items-center justify-center bg-black z-40">
+  <div class="absolute h-screen w-screen flex items-center justify-center bg-base-200 z-40">
     <span>
       Please rotate device to landscape mode.
     </span>
@@ -70,7 +70,7 @@
         {/each}
       </ul>
     </div>
-    <a class="btn glass" href="/app">Play</a>
+    <a class="btn btn-ghost" href="/app">Play</a>
   </div>
   <slot />
 </div>
