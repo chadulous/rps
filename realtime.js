@@ -1,5 +1,4 @@
 import { customAlphabet } from 'nanoid'
-// this aproach needs at least 15 years to at just a 1% chance of collision
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const nanoid = customAlphabet(alphabet, 10);
 
